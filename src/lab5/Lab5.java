@@ -19,7 +19,6 @@ public class Lab5 implements Stages {
 
 	private QueryDB queryEngine;
 
-	//private Stage stage;
 	private Scene scene;
 	private GridPane gridpane;
 
@@ -44,7 +43,6 @@ public class Lab5 implements Stages {
 
 	public Lab5(QueryDB queryEngine) {
 		this.queryEngine = queryEngine;
-		//stage = new Stage();
 		stage.setTitle("Lab 5");
 		bookResults = new ArrayList<Book>();
 
@@ -57,22 +55,27 @@ public class Lab5 implements Stages {
 	}
 	
 	private void buildBookResultsList() {
-		if(!bookResultsSelectionList.getItems().isEmpty())
+		if (!bookResultsSelectionList.getItems().isEmpty())
 			bookResultsSelectionList.getItems().clear();
-		
-		for (Book b: bookResults) {
-			bookResultsSelectionList.getItems().add(b);
+
+		if (bookResults != null) {
+			for (Book b : bookResults) {
+				bookResultsSelectionList.getItems().add(b);
+			}
+		}
+		else {
+			statusInfo.setFill(Color.FIREBRICK);
+			statusInfo.setText("no results");
 		}
 	}
-	
+
 	private void getSelectedBook() {
 		if(!bookResultsSelectionList.getSelectionModel().isEmpty()) {
-			System.out.println("Selection: " + bookResultsSelectionList.getSelectionModel().getSelectedItem());
-			stage.hide();
 			new BookInfoView(bookResultsSelectionList.getSelectionModel().getSelectedItem(), queryEngine);
 		}
 		else {
-			System.out.println("Please select a book");
+			statusInfo.setFill(Color.FIREBRICK);
+			statusInfo.setText("Please select a book");
 		}		
 	}
 
@@ -112,7 +115,7 @@ public class Lab5 implements Stages {
 				else {
 					memberIDStatus.setText("MemberID is not valid");
 					stage.hide();
-					new AddMemeber(queryEngine);
+					new AddMemeber();
 				}
 			}
 		});
@@ -123,6 +126,7 @@ public class Lab5 implements Stages {
 				if(memberVerified) {
 					statusInfo.setText("Checking for book with isbn: " + isbnField.getText());
 					bookResults = queryEngine.queryBookByISBN(isbnField.getText());
+					buildBookResultsList();
 				}
 				else {
 					statusInfo.setText("member not yet verified");

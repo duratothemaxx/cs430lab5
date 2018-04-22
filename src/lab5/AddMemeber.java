@@ -9,10 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class AddMemeber implements Stages {
-
-	private QueryDB queryEngine;
 	
-	//private Stage addMemberStage;
 	private Scene scene;
 	private GridPane gridpane;
 
@@ -25,10 +22,8 @@ public class AddMemeber implements Stages {
 	private Button createMemberButton;
 	private Button cancelButton;
 	
-	private String values;
 
-	public AddMemeber(QueryDB queryEngine) {
-		this.queryEngine = queryEngine;
+	public AddMemeber() {
 
 		//addMemberStage = new Stage();
 		addMemberStage.setTitle("Add a new Member?");
@@ -71,8 +66,6 @@ public class AddMemeber implements Stages {
 			public void handle(ActionEvent event) {
 				if(allFilledIn()) {
 					System.out.println("All fields filled in");
-					createValuesStmt();					
-					queryEngine.insertMember(values);
 					stage.show();
 					addMemberStage.close();
 				}
@@ -107,11 +100,6 @@ public class AddMemeber implements Stages {
 				!dobField.getText().isEmpty() &&
 				!genderField.getText().isEmpty();
 	}
-	
-	private void createValuesStmt() {
-		values = "('" + memberIDField.getText() + "', '" + lastNameField.getText() +
-				"', '" + firstNameField.getText() + "', '" + dobField.getText() + 
-				"', '" + genderField.getText() + "');";		
-	}
+
 
 }

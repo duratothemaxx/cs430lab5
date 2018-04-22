@@ -44,11 +44,9 @@ public class BookInfoView implements Stages {
 	
 	public void buildBookResults(Book book) {
 		
-		
-		
-		
-		bookInfo.setWrappingWidth(220);
-		bookInfo.setText(book.toString());
+
+		bookInfo.setWrappingWidth(340);
+		bookInfo.setText(queryEngine.queryBookInventory(book));
 		
 	}
 }
