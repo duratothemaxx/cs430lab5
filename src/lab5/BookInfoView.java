@@ -13,19 +13,20 @@ public class BookInfoView implements Stages {
 	private GridPane gridpane;
 	private Text bookInfo;
 	private Button okButton;
+	private QueryDB queryEngine;
 
-	public BookInfoView(String info) {
-		bookInfoStage.setTitle("Selected Book Info");
+	public BookInfoView(Book book, QueryDB queryEngine) {
+		this.queryEngine = queryEngine;
+		bookInfoStage.setTitle("Selected Book Info");		
 		
 		gridpane = new GridPane();
 		bookInfo = new Text();
 		okButton = new Button("OK");
-		bookInfo.setWrappingWidth(220);
-		bookInfo.setText(info);
 		gridpane.add(bookInfo, 0, 0, 2, 2);
 		gridpane.add(okButton, 0, 4);
 		
 		buttonEvents();
+		buildBookResults(book);
 		scene = new Scene(gridpane, 360, 240);
 		bookInfoStage.setScene(scene);		
 		bookInfoStage.show();
@@ -39,5 +40,15 @@ public class BookInfoView implements Stages {
 				bookInfoStage.close();
 			}
 		});
+	}
+	
+	public void buildBookResults(Book book) {
+		
+		
+		
+		
+		bookInfo.setWrappingWidth(220);
+		bookInfo.setText(book.toString());
+		
 	}
 }

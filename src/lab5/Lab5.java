@@ -7,8 +7,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -36,7 +36,7 @@ public class Lab5 implements Stages {
 	private Button quitButton;
 	private Text statusInfo;
 	
-	private ListView<CheckBox> bookResultsCheckBoxList;
+	private ListView<Book> bookResultsSelectionList;
 	private ArrayList<Book> bookResults;
 	private Button getBookInfoButton;
 	
@@ -57,27 +57,23 @@ public class Lab5 implements Stages {
 	}
 	
 	private void buildBookResultsList() {
-		if(bookResultsCheckBoxList.getItems().isEmpty())
-			bookResultsCheckBoxList.getItems().clear();
+		if(!bookResultsSelectionList.getItems().isEmpty())
+			bookResultsSelectionList.getItems().clear();
 		
 		for (Book b: bookResults) {
-			bookResultsCheckBoxList.getItems().add(new CheckBox(b.getTitle() + " " + b.getisbn()));
-		}
-	}
-	
-	private void buildBookResultsListAuthor() {
-		if(bookResultsCheckBoxList.getItems().isEmpty())
-			bookResultsCheckBoxList.getItems().clear();
-		
-		for (Book b: bookResults) {
-			bookResultsCheckBoxList.getItems()
-			.add(new CheckBox(b.getTitle() + " " + b.getisbn() + " " + b.getAuthor()));
+			bookResultsSelectionList.getItems().add(b);
 		}
 	}
 	
 	private void getSelectedBook() {
-		stage.hide();
-		new BookInfoView("some book info here");		
+		if(!bookResultsSelectionList.getSelectionModel().isEmpty()) {
+			System.out.println("Selection: " + bookResultsSelectionList.getSelectionModel().getSelectedItem());
+			stage.hide();
+			new BookInfoView(bookResultsSelectionList.getSelectionModel().getSelectedItem(), queryEngine);
+		}
+		else {
+			System.out.println("Please select a book");
+		}		
 	}
 
 	private void buildGridPaneLayout() {
@@ -97,10 +93,10 @@ public class Lab5 implements Stages {
 		gridpane.add(authorField, 1, 2);
 		gridpane.add(checkAuthorButton, 2, 2);
 		gridpane.add(statusInfo, 0, 4, 3, 2);
-		gridpane.add(bookResultsCheckBoxList, 0, 6, 3, 3);
+		gridpane.add(bookResultsSelectionList, 0, 6, 3, 3);
 		gridpane.add(getBookInfoButton, 1, 10);
 
-		scene = new Scene(gridpane, 480, 480);
+		scene = new Scene(gridpane, 480, 520);
 		stage.setScene(scene);
 	}
 
@@ -126,7 +122,7 @@ public class Lab5 implements Stages {
 			public void handle(ActionEvent event) {
 				if(memberVerified) {
 					statusInfo.setText("Checking for book with isbn: " + isbnField.getText());
-					queryEngine.queryBookByISBN(isbnField.getText());
+					bookResults = queryEngine.queryBookByISBN(isbnField.getText());
 				}
 				else {
 					statusInfo.setText("member not yet verified");
@@ -154,7 +150,7 @@ public class Lab5 implements Stages {
 				if(memberVerified) {
 					statusInfo.setText("Checking for book with Author: " + authorField.getText());
 					bookResults = queryEngine.queryBookByAuthor(authorField.getText());
-					buildBookResultsListAuthor();
+					buildBookResultsList();
 				}
 				else {
 					statusInfo.setText("member not yet verified");
@@ -185,19 +181,20 @@ public class Lab5 implements Stages {
 		memberIDStatus.setFill(Color.FIREBRICK);
 		checkIsbnButton = new Button("submit");
 		isbnField = new TextField();
-		isbnField.setPromptText("isbn");
+		isbnField.setPromptText("isbn search (Exact)");
 		checkBookNameButton = new Button("submit");
 		bookNameField = new TextField();
-		bookNameField.setPromptText("book name");
+		bookNameField.setPromptText("book name search");
 		checkAuthorButton = new Button("submit");
 		authorField = new TextField();
-		authorField.setPromptText("author name");
+		authorField.setPromptText("author name search");
 		quitButton = new Button("QUIT");
 		statusInfo = new Text();
 		statusInfo.setWrappingWidth(340);
 		statusInfo.setTextAlignment(TextAlignment.LEFT);
-		bookResultsCheckBoxList = new ListView<>();
-		bookResultsCheckBoxList.setPrefHeight(120);
+		bookResultsSelectionList = new ListView<>();
+		bookResultsSelectionList.setPrefHeight(180);
+		bookResultsSelectionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		getBookInfoButton = new Button("Get info from selected");
 	}
 
