@@ -82,7 +82,7 @@ public class Lab5 implements Stages {
 
 	private void buildGridPaneLayout() {
 		gridpane = new GridPane();
-		gridpane.setGridLinesVisible(true);
+		gridpane.setGridLinesVisible(false);
 		gridpane.setAlignment(Pos.CENTER);
 		gridpane.setHgap(10);
 		gridpane.setVgap(10);
